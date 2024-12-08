@@ -28,6 +28,13 @@
 	<li>Local residents and students looking for outdoor activities.</li>
 	<li>Hiking and walking enthusiasts seeking new adventures.</li>
 </ul>
-
 <p><u><strong>TRWalks</strong></u>&nbsp;for applications promoting the beauty of Tomsk&#39;s walking trails.<br />
 <br />
+
+## **Deployment**  
+ Clone the repository:  
+   ```bash  
+   git clone https://github.com/shadyashraf174/TRWalks.API.git  
+   ```  
+
+
