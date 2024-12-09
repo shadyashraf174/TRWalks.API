@@ -54,5 +54,30 @@ namespace TRWalks.API.Controllers {
             // Return DTOs to the client
             return Ok(regionDTO);
         }
+
+        [HttpPost]
+        public IActionResult Create([FromBody] AddRegionRequestDTO addRegionRequest) {
+            // Convert DTO to domain model
+            var regionDomainModel = new Region {
+                Code = addRegionRequest.Code,
+                Name = addRegionRequest.Name,
+                RegionImageUrl = addRegionRequest.RegionImageUrl
+            };
+
+            // Add to database
+            dbContext.Regions.Add(regionDomainModel);
+            dbContext.SaveChanges();
+
+            // Convert domain model to DTO
+            var regionDto = new RegionDTO {
+                Id = regionDomainModel.Id,
+                Code = regionDomainModel.Code,
+                Name = regionDomainModel.Name,
+                RegionImageUrl = regionDomainModel.RegionImageUrl
+            };
+
+            // Return a 201 response with location
+            return CreatedAtAction(nameof(GetById), new { id = regionDto.Id }, regionDto);
+        }
     }
 }
