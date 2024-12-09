@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TRWalks.API.Data;
 using TRWalks.API.DTO;
 using TRWalks.API.Models.Domain;
@@ -15,9 +16,9 @@ namespace TRWalks.API.Controllers {
         }
 
         [HttpGet]
-        public IActionResult GetAll() {
+        public async Task<IActionResult> GetAll() {
             // Get data from database (domain models)
-            var regionsDomain = dbContext.Regions.ToList();
+            var regionsDomain = await dbContext.Regions.ToListAsync();
 
             // Convert domain models to DTOs
             var regionsDTO = new List<RegionDTO>();
@@ -36,10 +37,10 @@ namespace TRWalks.API.Controllers {
 
         [HttpGet]
         [Route("{id:Guid}")]
-        public IActionResult GetById([FromRoute] Guid id) {
+        public async Task<IActionResult> GetById([FromRoute] Guid id) {
 
             // Get data from database (domain models)
-            var regionDomain = dbContext.Regions.Find(id);
+            var regionDomain = await dbContext.Regions.FindAsync(id);
 
             if (regionDomain == null) {
                 return NotFound();
@@ -56,7 +57,7 @@ namespace TRWalks.API.Controllers {
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] AddRegionRequestDTO addRegionRequest) {
+        public async Task<IActionResult> Create([FromBody] AddRegionRequestDTO addRegionRequest) {
             // Convert DTO to domain model
             var regionDomainModel = new Region {
                 Code = addRegionRequest.Code,
@@ -65,8 +66,8 @@ namespace TRWalks.API.Controllers {
             };
 
             // Add to database
-            dbContext.Regions.Add(regionDomainModel);
-            dbContext.SaveChanges();
+            await dbContext.Regions.AddAsync(regionDomainModel);
+            await dbContext.SaveChangesAsync();
 
             // Convert domain model to DTO
             var regionDto = new RegionDTO {
@@ -84,9 +85,9 @@ namespace TRWalks.API.Controllers {
         // PUT: https://localhost:portnumber/api/regions/{id}
         [HttpPut]
         [Route("{id:Guid}")]
-        public IActionResult Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto) {
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto) {
             // Check if region exists
-            var regionDomainModel = dbContext.Regions.FirstOrDefault(x => x.Id == id);
+            var regionDomainModel = await dbContext.Regions.FirstOrDefaultAsync(x => x.Id == id);
             if (regionDomainModel == null) {
                 return NotFound();
             }
@@ -109,14 +110,14 @@ namespace TRWalks.API.Controllers {
         // DELETE: https://localhost:portnumber/api/regions/{id}
         [HttpDelete]
         [Route("{id:Guid}")]
-        public IActionResult Delete([FromRoute] Guid id) {
-            var regionDomainModel = dbContext.Regions.FirstOrDefault(x => x.Id == id);
+        public async Task<IActionResult> Delete([FromRoute] Guid id) {
+            var regionDomainModel = await dbContext.Regions.FirstOrDefaultAsync(x => x.Id == id);
             if (regionDomainModel == null) {
                 return NotFound();
             }
             // Delete region
             dbContext.Regions.Remove(regionDomainModel);
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
             // return deleted Region back
             // map Domain Model to DTO
             var regionDto = new RegionDTO {
