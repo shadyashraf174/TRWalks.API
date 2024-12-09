@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TRWalks.API.Data;
+using TRWalks.API.DTO;
 using TRWalks.API.Models.Domain;
 
 namespace TRWalks.API.Controllers {
@@ -15,21 +16,43 @@ namespace TRWalks.API.Controllers {
 
         [HttpGet]
         public IActionResult GetAll() {
+            // Get data from database (domain models)
+            var regionsDomain = dbContext.Regions.ToList();
 
-            var regions = dbContext.Regions.ToList();
+            // Convert domain models to DTOs
+            var regionsDTO = new List<RegionDTO>();
+            foreach (var regionDomain in regionsDomain) {
+                regionsDTO.Add(new RegionDTO {
+                    Id = regionDomain.Id,
+                    Code = regionDomain.Code,
+                    Name = regionDomain.Name,
+                    RegionImageUrl = regionDomain.RegionImageUrl
+                });
+            }
 
-            return Ok(regions);
+            // Return DTOs to the client
+            return Ok(regionsDTO);
         }
 
         [HttpGet]
         [Route("{id:Guid}")]
         public IActionResult GetById([FromRoute] Guid id) {
-            var regions = dbContext.Regions.Find(id);
 
-            if (regions == null) {
+            // Get data from database (domain models)
+            var regionDomain = dbContext.Regions.Find(id);
+
+            if (regionDomain == null) {
                 return NotFound();
             }
-            return Ok(regions);
+            // Convert domain models to DTOs
+            var regionDTO = new RegionDTO {
+                Id = regionDomain.Id,
+                Code = regionDomain.Code,
+                Name = regionDomain.Name,
+                RegionImageUrl = regionDomain.RegionImageUrl
+            };
+            // Return DTOs to the client
+            return Ok(regionDTO);
         }
     }
 }
