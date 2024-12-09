@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TRWalks.API.Data;
+using TRWalks.API.Mappings;
 using TRWalks.API.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,8 @@ builder.Services.AddDbContext<TRWalksDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TRWalksConnectionString")));
 
 builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
+
+builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
 var app = builder.Build();
 
