@@ -4,21 +4,24 @@ using Microsoft.EntityFrameworkCore;
 using TRWalks.API.Data;
 using TRWalks.API.DTO;
 using TRWalks.API.Models.Domain;
+using TRWalks.API.Repositories;
 
 namespace TRWalks.API.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class RegionsController : ControllerBase {
         private readonly TRWalksDbContext dbContext;
+        private readonly IRegionRepository regionRepository;
 
-        public RegionsController(TRWalksDbContext dbContext) {
+        public RegionsController(TRWalksDbContext dbContext, IRegionRepository regionRepository ) {
             this.dbContext = dbContext;
+            this.regionRepository = regionRepository;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll() {
             // Get data from database (domain models)
-            var regionsDomain = await dbContext.Regions.ToListAsync();
+            var regionsDomain = await regionRepository.GetAllAsync();
 
             // Convert domain models to DTOs
             var regionsDTO = new List<RegionDTO>();
