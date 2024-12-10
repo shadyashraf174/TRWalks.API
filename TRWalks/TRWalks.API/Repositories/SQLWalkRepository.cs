@@ -1,4 +1,5 @@
-﻿using TRWalks.API.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using TRWalks.API.Data;
 using TRWalks.API.Models.Domain;
 
 namespace TRWalks.API.Repositories {
@@ -15,6 +16,10 @@ namespace TRWalks.API.Repositories {
             await dbContext.walks.AddAsync(walk);
             await dbContext.SaveChangesAsync();
             return walk;
+        }
+
+        public async Task<List<Walk>> GetAllAsync() {
+            return await dbContext.walks.ToListAsync();
         }
     }
 }
