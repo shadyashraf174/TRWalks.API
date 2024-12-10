@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TRWalks.API.CustomActionFilters;
 using TRWalks.API.Data;
 using TRWalks.API.DTO;
 using TRWalks.API.Models.Domain;
@@ -47,9 +48,8 @@ namespace TRWalks.API.Controllers {
         }
 
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> Create([FromBody] AddRegionRequestDTO addRegionRequestDto) {
-
-            if (ModelState.IsValid) {
 
                 // Convert DTO to domain model
                 var regionDomainModel = mapper.Map<Region>(addRegionRequestDto);
@@ -60,18 +60,16 @@ namespace TRWalks.API.Controllers {
                 // Convert domain model to DTO
                 var regionDto = mapper.Map<RegionDTO>(regionDomainModel);
 
-                // Return a 201 response with location
-                return CreatedAtAction(nameof(GetById), new { id = regionDto.Id }, regionDto);
-            }
-            return BadRequest(ModelState);
+            // Return a 201 response with location
+            return CreatedAtAction(nameof(GetById), new { id = regionDto.Id }, regionDto);
         }
 
 
         [HttpPut]
+        [ValidateModel]
         [Route("{id:Guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto) {
 
-            if (ModelState.IsValid) {
                 //Map DTO to domain model
                 var regionDomainModel = mapper.Map<Region>(updateRegionRequestDto);
 
@@ -83,8 +81,6 @@ namespace TRWalks.API.Controllers {
 
                 return Ok(mapper.Map<RegionDTO>(regionDomainModel));
             }
-            return BadRequest(ModelState);
-        }
 
 
         [HttpDelete]

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TRWalks.API.CustomActionFilters;
 using TRWalks.API.DTO;
 using TRWalks.API.Models.Domain;
 using TRWalks.API.Repositories;
@@ -22,9 +23,9 @@ namespace TRWalks.API.Controllers {
         // GREATE Walk
         // POST: /api/walks
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> Create([FromBody] AddWalkRequestDto addWalkRequestDto) {
 
-            if (ModelState.IsValid) {
                 //Map DTO to Domain Model 
                 var walkDomainModel = mapper.Map<Walk>(addWalkRequestDto);
 
@@ -33,8 +34,6 @@ namespace TRWalks.API.Controllers {
                 // Map Domain model to DTO
                 return Ok(mapper.Map<WalkDto>(walkDomainModel));
             }
-            return BadRequest(ModelState);
-        }
 
 
         // GET Walks
@@ -64,10 +63,10 @@ namespace TRWalks.API.Controllers {
         // PUT Walk
         // PUT: GET: /api/walks/{id}
         [HttpPut]
+        [ValidateModel]
         [Route("{id:Guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, UpdateWalkRequestDto updateWalkRequestDto) {
 
-            if (ModelState.IsValid) {
                 //Map DTO to Domain Model
                 var walkDomainModel = mapper.Map<Walk>(updateWalkRequestDto);
 
@@ -80,8 +79,6 @@ namespace TRWalks.API.Controllers {
                 // Map Domain Model To DTO
                 return Ok(mapper.Map<WalkDto>(walkDomainModel));
             }
-            return BadRequest(ModelState);
-        }
 
 
         //DELET Walk By Id
