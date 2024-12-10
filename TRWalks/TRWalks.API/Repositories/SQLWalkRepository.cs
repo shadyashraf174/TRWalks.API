@@ -19,7 +19,7 @@ namespace TRWalks.API.Repositories {
         }
 
         public async Task<List<Walk>> GetAllAsync() {
-            return await dbContext.walks.ToListAsync();
+            return await dbContext.walks.Include("Difficulty").Include("Region").ToListAsync();
         }
     }
 }
