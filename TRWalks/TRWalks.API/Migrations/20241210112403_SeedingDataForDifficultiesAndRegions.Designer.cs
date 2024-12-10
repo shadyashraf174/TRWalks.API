@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TRWalks.API.Data;
 
@@ -11,9 +12,11 @@ using TRWalks.API.Data;
 namespace TRWalks.API.Migrations
 {
     [DbContext(typeof(TRWalksDbContext))]
-    partial class TRWalksDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241210112403_SeedingDataForDifficultiesAndRegions")]
+    partial class SeedingDataForDifficultiesAndRegions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
