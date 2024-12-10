@@ -63,7 +63,7 @@ namespace TRWalks.API.Controllers {
         // PUT: GET: /api/walks/{id}
         [HttpPut]
         [Route("{id:Guid}")]
-        public async Task<IActionResult> Update([FromRoute] Guid id, UpdateWalkRequestDto updateWalkRequestDto ) {
+        public async Task<IActionResult> Update([FromRoute] Guid id, UpdateWalkRequestDto updateWalkRequestDto) {
 
             //Map DTO to Domain Model
             var walkDomainModel = mapper.Map<Walk>(updateWalkRequestDto);
@@ -71,7 +71,7 @@ namespace TRWalks.API.Controllers {
             walkDomainModel = await walkRepository.UpdateAsync(id, walkDomainModel);
 
             if (walkDomainModel == null) {
-                return NotFound(); 
+                return NotFound();
             }
 
             // Map Domain Model To DTO
@@ -79,5 +79,20 @@ namespace TRWalks.API.Controllers {
 
         }
 
+
+        //DELET Walk By Id
+        //DELET: /api/walks/{id}
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> Delete([FromRoute] Guid id) {
+
+            var deleteWalkDomainModel = await walkRepository.DeleteAsync(id);
+
+            if (deleteWalkDomainModel == null) {
+                return NotFound();
+            }
+            // Map Domain model to DTO
+            return Ok(mapper.Map<WalkDto>(deleteWalkDomainModel));
+        }
     }
 }

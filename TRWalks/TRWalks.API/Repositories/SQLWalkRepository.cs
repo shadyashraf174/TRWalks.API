@@ -17,8 +17,20 @@ namespace TRWalks.API.Repositories {
             return walk;
         }
 
-        public async Task<List<Walk>> GetAllAsync() {
+        public async Task<Walk?> DeleteAsync(Guid id) {
+            var existinhWalk = await dbContext.walks.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (existinhWalk == null) {
+                return null;
+            }
+            dbContext.walks.Remove(existinhWalk);
+            await dbContext.SaveChangesAsync();
+            return existinhWalk;
+        }
+
+            public async Task<List<Walk>> GetAllAsync() {
             return await dbContext.walks.Include("Difficulty").Include("Region").ToListAsync();
+
         }
 
         public async Task<Walk?> GetByIdAsync(Guid id) {
