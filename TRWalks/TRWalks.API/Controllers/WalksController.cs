@@ -37,10 +37,15 @@ namespace TRWalks.API.Controllers {
 
 
         // GET Walks
-        // GET: /api/walks?filterOn=Name&filterQuery=Tomsk
+        // GET: /api/walks?filterOn=Name&filterQuery=Tomsk&sortBy=Name&isAscending=true
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] string? filterOn, [FromQuery] string? filterQuery ) {
-            var walksDomainModel = await walkRepository.GetAllAsync(filterOn, filterQuery);
+        public async Task<IActionResult> GetAll(
+            [FromQuery] string? filterOn, 
+            [FromQuery] string? filterQuery, 
+            [FromQuery] string? sortBy, 
+            [FromQuery] bool? isAscending 
+            ) {
+            var walksDomainModel = await walkRepository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending ?? true);
 
             //Map Domain model to DTO
             return Ok(mapper.Map<List<WalkDto>>(walksDomainModel));
