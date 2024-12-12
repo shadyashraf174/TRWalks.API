@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 using TRWalks.API.Data;
 using TRWalks.API.Models.Domain;
 
@@ -28,8 +29,18 @@ namespace TRWalks.API.Repositories {
             return existinhWalk;
         }
 
-            public async Task<List<Walk>> GetAllAsync() {
-            return await dbContext.walks.Include("Difficulty").Include("Region").ToListAsync();
+            public async Task<List<Walk>> GetAllAsync(string? filterOn = null, string? filterQuery = null) {
+            var walks = dbContext.walks.Include("Difficulty").Include("Region").AsQueryable();
+
+            //Filtering
+            if (string.IsNullOrWhiteSpace(filterOn) == false && string.IsNullOrWhiteSpace(filterQuery) == false) {
+                if (filterOn.Equals("Name", StringComparison.OrdinalIgnoreCase)) {
+                    walks = walks.Where(x => x.Name.Contains(filterQuery));
+                } 
+            }
+            return await walks.ToListAsync();
+
+            //return await dbContext.walks.Include("Difficulty").Include("Region").ToListAsync();
 
         }
 
