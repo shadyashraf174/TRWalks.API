@@ -2,15 +2,19 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TRWalks.API.DTO;
+using TRWalks.API.Models.DTO;
+using TRWalks.API.Repositories;
 
 namespace TRWalks.API.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase {
         private readonly UserManager<IdentityUser> userManager;
+        private readonly ITokenRepository tokenRepository;
 
-        public AuthController(UserManager<IdentityUser> userManager) {
+        public AuthController(UserManager<IdentityUser> userManager, ITokenRepository tokenRepository) {
             this.userManager = userManager;
+            this.tokenRepository = tokenRepository;
         }
 
 
@@ -55,9 +59,22 @@ namespace TRWalks.API.Controllers {
 
                 if (checkPasswordResult) {
 
-                    // Create Token
+                    // Get Roles for this user
+                    var roles = await userManager.GetRolesAsync(user);
 
-                    return Ok();
+                    if (roles != null) {
+
+                        // Create Token
+                        var jwtToken = tokenRepository.CreateJWTToken(user, roles.ToList());
+
+                        var response = new LoginResponseDto {
+
+                            JwtToken = jwtToken
+
+                        };
+
+                    return Ok(response);
+                    }
                 }
             }
             return BadRequest("Username or password incorrect");
