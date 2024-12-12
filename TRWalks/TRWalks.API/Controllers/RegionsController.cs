@@ -12,7 +12,7 @@ using TRWalks.API.Repositories;
 namespace TRWalks.API.Controllers {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+   
     public class RegionsController : ControllerBase {
         private readonly TRWalksDbContext dbContext;
         private readonly IRegionRepository regionRepository;
@@ -26,6 +26,7 @@ namespace TRWalks.API.Controllers {
 
 
         [HttpGet]
+        [Authorize(Roles ="Reader")]
         public async Task<IActionResult> GetAll() {
             // Get data from database (domain models)
             var regionsDomain = await regionRepository.GetAllAsync();
@@ -36,6 +37,7 @@ namespace TRWalks.API.Controllers {
 
         [HttpGet]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetById([FromRoute] Guid id) {
 
             // Get data from database (domain models)
@@ -51,6 +53,7 @@ namespace TRWalks.API.Controllers {
 
         [HttpPost]
         [ValidateModel]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Create([FromBody] AddRegionRequestDTO addRegionRequestDto) {
 
                 // Convert DTO to domain model
@@ -70,6 +73,7 @@ namespace TRWalks.API.Controllers {
         [HttpPut]
         [ValidateModel]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto) {
 
                 //Map DTO to domain model
@@ -87,6 +91,7 @@ namespace TRWalks.API.Controllers {
 
         [HttpDelete]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Delete([FromRoute] Guid id) {
             var regionDomainModel = await regionRepository.DeleteAsync(id);
             if (regionDomainModel == null) {
