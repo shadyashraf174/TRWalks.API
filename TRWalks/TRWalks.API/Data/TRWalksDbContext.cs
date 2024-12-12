@@ -6,7 +6,7 @@ namespace TRWalks.API.Data {
 
     public class TRWalksDbContext : DbContext {
 
-        public TRWalksDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions) {
+        public TRWalksDbContext(DbContextOptions<TRWalksDbContext> dbContextOptions) : base(dbContextOptions) {
 
         }
 

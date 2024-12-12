@@ -18,6 +18,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<TRWalksDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TRWalksConnectionString")));
 
+builder.Services.AddDbContext<TRWalksAuthDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("TRWalksAuthConnectionString")));
+
 builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
 builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
 
