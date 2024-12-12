@@ -33,7 +33,9 @@ namespace TRWalks.API.Repositories {
                 string? filterOn = null, 
                 string? filterQuery = null,
                 string? sortBy = null,
-                bool isAscending = true
+                bool isAscending = true,
+                int pageNumber = 1, 
+                int pageSize = 1000
                 ) {
             var walks = dbContext.walks.Include("Difficulty").Include("Region").AsQueryable();
 
@@ -54,8 +56,10 @@ namespace TRWalks.API.Repositories {
                 }
             } 
 
-            return await walks.ToListAsync();
+            //Pagination 
+            var skipResuits = ( pageNumber - 1 ) * pageSize;
 
+            return await walks.Skip(skipResuits).Take(pageSize).ToListAsync();
             //return await dbContext.walks.Include("Difficulty").Include("Region").ToListAsync();
 
         }
