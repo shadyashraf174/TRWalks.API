@@ -41,5 +41,27 @@ namespace TRWalks.API.Controllers {
             }
             return BadRequest("somethis went Wrong");
         }
+
+
+        // POST: /api/Auth/Login
+        [HttpPost]
+        [Route("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto) {
+
+            var user = await userManager.FindByNameAsync(loginRequestDto.Username);
+
+            if (user != null) {
+                var checkPasswordResult = await userManager.CheckPasswordAsync(user, loginRequestDto.Password);
+
+                if (checkPasswordResult) {
+
+                    // Create Token
+
+                    return Ok();
+                }
+            }
+            return BadRequest("Username or password incorrect");
+
+        }
     }
 }
